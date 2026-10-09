@@ -1,0 +1,496 @@
+:root {
+  /* Frosted White & Cool Gray Palette */
+  --bg-dark: #071018;
+  --glass-bg: rgba(210, 225, 235, 0.12);
+  --glass-border: rgba(255, 255, 255, 0.25);
+  --glass-blur: blur(18px);
+  --card-radius: 20px;
+  
+  --text-main: #ffffff;
+  --text-muted: rgba(255, 255, 255, 0.7);
+  
+  /* Subtle Accents */
+  --accent-cyan: #22d3ee;
+  --accent-teal: #2dd4bf;
+  --accent-amber: #fcd34d;
+  --accent-lavender: #c084fc;
+  --accent-blue: #60a5fa;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  color: var(--text-main);
+  background-color: var(--bg-dark);
+  overflow-x: hidden;
+}
+
+/* -------------------------------------
+   Animated Rain Background (UNCHANGED)
+-------------------------------------- */
+.rain-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: -2;
+  background: linear-gradient(to bottom, #020813, #0b1528, #13223f);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.drop {
+  position: absolute;
+  bottom: 100%;
+  width: 1px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(200, 220, 255, 0.4));
+  animation: fall linear infinite;
+}
+
+@keyframes fall {
+  0% { transform: translateY(-20vh); }
+  100% { transform: translateY(120vh); }
+}
+
+/* Subtle Lighting Layer Behind Cards */
+.ambient-glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: -1;
+  background: 
+    radial-gradient(circle at 15% 30%, rgba(34, 211, 238, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 85% 70%, rgba(192, 132, 252, 0.06) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* -------------------------------------
+   Layout & Typography
+-------------------------------------- */
+.app-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.title-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.title-icon {
+  color: var(--text-main);
+  opacity: 0.9;
+}
+
+h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: #ffffff;
+}
+
+h1 span {
+  background: linear-gradient(135deg, #e0f2fe 0%, #7dd3fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+}
+
+/* -------------------------------------
+   Glassmorphism Cards
+-------------------------------------- */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--card-radius);
+  padding: 24px;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.section-header {
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-bottom: 4px;
+}
+
+.section-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* -------------------------------------
+   1. Upload Section (Compact)
+-------------------------------------- */
+.upload-compact {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.upload-compact-info {
+  flex: 1;
+  min-width: 250px;
+}
+
+.upload-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border: 1px dashed rgba(255, 255, 255, 0.4);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  flex: 2;
+  min-width: 250px;
+}
+
+.upload-area:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.upload-area input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.upload-prompt {
+  font-size: 0.95rem;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.file-info {
+  display: flex;
+  flex-direction: column;
+  flex: 2;
+  min-width: 200px;
+}
+
+.file-name {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-meta {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.btn-analyze {
+  padding: 12px 32px;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(5px);
+  flex-shrink: 0;
+}
+
+.btn-analyze:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+.btn-analyze:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* -------------------------------------
+   2. Rainfall Intensity
+-------------------------------------- */
+.intensity-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  padding: 10px 0;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.intensity-text-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.intensity-level {
+  font-size: 3rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin: 10px 0;
+}
+
+/* Conditional Colors */
+.intensity-HEAVY { color: var(--accent-blue); text-shadow: 0 0 15px rgba(96,165,250,0.3); }
+.intensity-MODERATE { color: var(--accent-teal); text-shadow: 0 0 15px rgba(45,212,191,0.3); }
+.intensity-LIGHT { color: var(--text-main); text-shadow: 0 0 15px rgba(255,255,255,0.3); }
+
+.intensity-desc {
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+.score-gauge-container {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.score-gauge-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.gauge-bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 8;
+}
+
+.gauge-progress {
+  fill: none;
+  stroke: var(--accent-cyan);
+  stroke-width: 8;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s ease-out;
+}
+
+.gauge-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+}
+
+.gauge-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.gauge-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* -------------------------------------
+   3. Features Grid
+-------------------------------------- */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.feature-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: background 0.3s;
+}
+
+.feature-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.feature-icon-wrapper {
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Specific Accent Colors for Features */
+.feat-rms .feature-icon-wrapper { color: var(--accent-cyan); }
+.feat-peak .feature-icon-wrapper { color: var(--accent-teal); }
+.feat-spectral .feature-icon-wrapper { color: var(--accent-amber); }
+.feat-freq .feature-icon-wrapper { color: var(--accent-lavender); }
+
+.feature-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.feature-name {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.feature-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.feature-unit {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-left: 4px;
+  font-weight: 400;
+}
+
+/* -------------------------------------
+   4. FFT Spectrum
+-------------------------------------- */
+.chart-wrapper {
+  width: 100%;
+  height: 280px;
+  margin-top: 10px;
+}
+
+/* -------------------------------------
+   5. DSP Pipeline
+-------------------------------------- */
+.pipeline-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.pipeline-node {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pipeline-arrow {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 1rem;
+}
+
+.pipeline-params {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px dashed rgba(255,255,255,0.15);
+}
+
+.param-badge {
+  background: transparent;
+  font-size: 0.85rem;
+  color: #ffffff;
+}
+
+.param-badge span {
+  color: var(--text-muted);
+  margin-right: 4px;
+}
+
+/* -------------------------------------
+   Utilities
+-------------------------------------- */
+.error-msg {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+  padding: 12px;
+  border-radius: 12px;
+  text-align: center;
+  font-weight: 500;
+  margin-top: 16px;
+}
+
+@media (max-width: 900px) {
+  .upload-compact {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .btn-analyze {
+    width: 100%;
+  }
+}
