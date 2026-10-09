@@ -81,15 +81,30 @@ function App() {
     formData.append('file', file);
 
     try {
-      const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
+      const rawApiBase = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
+      const API_BASE = rawApiBase.replace(/\/$/, "");
+      
       const response = await fetch(`${API_BASE}/analyze`, {
         method: 'POST',
         body: formData,
       });
 
       if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(errData.detail || 'Failed to analyze audio');
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          const errData = await response.json();
+          throw new Error(errData.detail || 'Failed to analyze audio');
+        } else {
+          // It's not JSON, probably an HTML error page from Vercel
+          const errText = await response.text();
+          if (response.status === 404) {
+            throw new Error(`Endpoint not found (404). Check VITE_API_BASE_URL configuration. Target: ${API_BASE}/analyze`);
+          } else if (response.status === 413) {
+            throw new Error("The WAV file exceeds the deployment request-size limit (Vercel max 4.5 MB).");
+          } else {
+            throw new Error(`Backend error (${response.status}). Response was not JSON. Target: ${API_BASE}/analyze`);
+          }
+        }
       }
 
       const data = await response.json();
