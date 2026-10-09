@@ -8,6 +8,10 @@ from classifier import load_calibration, normalize_features, calculate_score, cl
 
 app = FastAPI(title="Rainfall Intensity Estimation API")
 
+@app.get("/")
+def read_root():
+    return {"status": "RainSonar API is running", "message": "Backend successfully deployed to Vercel"}
+
 # Allow CORS for React frontend
 origins_env = os.getenv("FRONTEND_ORIGINS")
 if origins_env:
